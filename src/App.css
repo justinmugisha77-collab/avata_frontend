@@ -1,0 +1,114 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+/* Scrollbar styling for categories */
+.overflow-x-auto {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+}
+
+.overflow-x-auto::-webkit-scrollbar {
+  height: 6px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.5);
+  border-radius: 3px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: rgba(107, 114, 128, 0.8);
+}
+
+/* Category dropdown styling */
+.category-dropdown {
+  /* keep scroll inside dropdown only */
+}
+
+.category-button {
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  color: #0b63ff; /* brighter blue for main categories */
+  background: white;
+  border-radius: 6px;
+  border: none;
+}
+.category-button:hover {
+  background: rgba(11,99,255,0.06);
+  color: #054bbe;
+}
+
+.subcategory-button {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  color: #374151; /* neutral slate for subcategories */
+  background: transparent;
+}
+.subcategory-button:hover {
+  background: rgba(59,130,246,0.04);
+  color: #1e3a8a;
+}
+
+/* make chevrons smaller inside dropdown */
+.category-dropdown .lucide-chevron-right {
+  opacity: 0.7;
+}
+
+/* Compact subcategory items used on the Products page and header dropdown */
+.product-subcategory-item,
+.category-dropdown .subcategory-button,
+.category-dropdown .product-subcategory-item {
+  font-size: 12px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-left: 10px;
+  padding-right: 10px;
+  line-height: 1.1;
+}
+
+/* tighten product card when size='small' already handled by component class 'isSmall' */
+.text-sm .product-card-compact {
+  font-size: 13px;
+}
