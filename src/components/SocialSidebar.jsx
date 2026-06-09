@@ -2,7 +2,7 @@ import React from 'react';
 import { FaEnvelope, FaFacebookF, FaInstagram, FaTiktok, FaWhatsapp } from 'react-icons/fa';
 import { SUPPORT_GMAIL_COMPOSE } from '../utils/supportContact';
 
-const links = [
+export const links = [
   {
     label: 'Gmail',
     url: SUPPORT_GMAIL_COMPOSE,
@@ -26,29 +26,23 @@ const links = [
     url: 'https://www.tiktok.com/@avata.trading.ltd?_r=1&_t=ZS-94BQ3IDab1E',
     bg: 'bg-black',
     icon: <FaTiktok className="text-white text-xl" />,
-  },
-  {
-    label: 'WhatsApp',
-    url: `https://wa.me/250788305811?text=${encodeURIComponent("Hello! 👋\nI'm interested in one of your products and would like to know how to buy it. Could you please provide more details?\n\nThank you! 😊")}`,
-    bg: 'bg-[#25D366]',
-    icon: <FaWhatsapp className="text-white text-xl" />,
-  },
+  }
 ];
 
-const SocialSidebar = () => (
-  <div className="fixed right-1 top-1/2 z-50 flex transform -translate-y-1/2 flex-col items-center gap-4 select-none">
+const SocialSidebar = ({ side = 'right' }) => (
+  <div className={`fixed ${side === 'right' ? 'right-1' : 'left-1'} top-1/2 z-50 flex transform -translate-y-1/2 flex-col items-center gap-3 select-none`}>
     {links.map((link) => (
       <a
         key={link.label}
         href={link.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="group flex flex-col items-center gap-1 rounded-full transition-all duration-300 hover:-translate-x-1"
+        className={`group flex flex-col items-center gap-1 rounded-full transition-all duration-300 ${side === 'right' ? 'hover:-translate-x-1' : 'hover:translate-x-1'}`}
       >
-        <span className={`flex h-9 w-9 items-center justify-center rounded-full ${link.bg} shadow-inner shadow-black/10`}>
-          {React.cloneElement(link.icon, { className: 'text-white text-base' })}
+        <span className={`flex h-8 w-8 items-center justify-center rounded-full ${link.bg} shadow-inner shadow-black/10`}>
+          {React.cloneElement(link.icon, { className: 'text-white text-sm' })}
         </span>
-        <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-yellow-400">
+        <span className="text-[9px] font-bold uppercase tracking-[0.12em] text-yellow-400">
           {link.label}
         </span>
       </a>

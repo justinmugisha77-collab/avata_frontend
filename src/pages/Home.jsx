@@ -14,7 +14,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
-import SocialSidebar from '../components/SocialSidebar';
+import ContactSidebar from '../components/ContactSidebar';
 import { ChevronDown, ChevronRight, ChevronUp, Heart, ShoppingCart, Shirt, ShoppingBag, HardHat, Cloud, Eye, Ear, Hand, Shield, Flame, Truck, TrafficCone, Droplet, Volume2, VolumeX } from 'lucide-react';
 import getFullImageUrl from '../utils/getFullImageUrl';
 
@@ -143,6 +143,9 @@ const Home = () => {
   const [heroMuted, setHeroMuted] = React.useState(false);
   const [canScrollUp, setCanScrollUp] = React.useState(false);
   const [canScrollDown, setCanScrollDown] = React.useState(true);
+  const [currentOfferPage, setCurrentOfferPage] = React.useState(1);
+  const offersPerPage = 8;
+  const [sidebarSide, setSidebarSide] = React.useState(() => localStorage.getItem('sidebarSide') || 'right');
 
   const getOfferLikeKey = React.useCallback((offer) => {
     const id = Number(offer?.id || offer?.special_offer_id || 0);
@@ -262,6 +265,14 @@ const Home = () => {
     loadProductsCatalog();
   }, []);
 
+  React.useEffect(() => {
+    try {
+      localStorage.setItem('sidebarSide', sidebarSide);
+    } catch (_e) {
+      // ignore
+    }
+  }, [sidebarSide]);
+
   const normalizeText = (value) => String(value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
 
   const resolveOfferProduct = (offer) => {
@@ -369,7 +380,17 @@ const Home = () => {
       <AnimatedNavbar>
         <Header />
       </AnimatedNavbar>
-      <SocialSidebar />
+      <ContactSidebar side={sidebarSide} />
+
+      {/* Side flip control (moves social/contact side left ↔ right) */}
+      <button
+        type="button"
+        onClick={() => setSidebarSide((s) => (s === 'right' ? 'left' : 'right'))}
+        className="fixed bottom-5 left-4 z-50 inline-flex items-center gap-2 px-3 py-2 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition"
+        title="Flip sidebars"
+      >
+        Flip Side
+      </button>
       {/* Animated Hero Section */}
       <motion.section
         className="text-white py-8 sm:py-12 md:py-16 lg:py-20 w-full relative overflow-hidden flex items-center justify-center mt-8 min-h-[400px] sm:min-h-[450px] md:min-h-[500px]"
@@ -452,7 +473,7 @@ const Home = () => {
         </div>
 
         {/* Shop by Category */}
-        <motion.section className="py-8 sm:py-12 md:py-16 bg-white w-full" variants={sectionReveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+        <motion.section className="py-8 sm:py-12 md:py-16 bg-blue-50 w-full" variants={sectionReveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
           <div className="w-full px-2 sm:px-4 lg:px-6 mx-auto">
             <motion.h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-center mb-4 sm:mb-6 bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-400 text-transparent bg-clip-text drop-shadow-lg" variants={heroTextReveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
               Shop by Category
@@ -477,10 +498,10 @@ const Home = () => {
                         whileHover={{ y: -6, boxShadow: '0 32px 70px rgba(15, 23, 42, 0.12)' }}
                         whileTap={{ scale: 0.98 }}
                         onClick={() => handleCategoryNavigate(category)}
-                        className="group relative flex h-full flex-col overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_18px_45px_rgba(15,23,42,0.08)] transition-all duration-300 hover:-translate-y-1"
+                        className="group relative flex h-full flex-col overflow-hidden rounded-[28px] border border-blue-200 bg-blue-50 shadow-[0_18px_45px_rgba(15,23,42,0.08)] transition-all duration-300 hover:-translate-y-1"
                       >
                         {/* CATEGORY IMAGE — reduced from h-56 to h-36 */}
-                        <div className="relative h-36 overflow-hidden bg-slate-100">
+                        <div className="relative h-36 overflow-hidden bg-blue-100">
                           {category?.image ? (
                             <img
                               src={getFullImageUrl(category.image)}
@@ -492,16 +513,16 @@ const Home = () => {
                               }}
                             />
                           ) : (
-                            <div className="flex h-full items-center justify-center bg-gradient-to-br from-slate-900 via-slate-700 to-slate-800">
+                            <div className="flex h-full items-center justify-center bg-gradient-to-br from-blue-900 via-blue-700 to-blue-800">
                               <div className="flex h-14 w-14 items-center justify-center rounded-3xl bg-white/10 shadow-inner">
                                 <CategoryIcon className="h-9 w-9 text-white" />
                               </div>
                             </div>
                           )}
-                          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent opacity-95" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-blue-950/70 via-transparent to-transparent opacity-95" />
                         </div>
 
-                        <div className="relative flex flex-1 flex-col justify-between p-4 bg-white">
+                        <div className="relative flex flex-1 flex-col justify-between p-4 bg-blue-50">
                           <div>
                             <p className="text-xs uppercase tracking-[0.3em] text-slate-500 mb-1">Category</p>
                             <h3 className="text-base sm:text-lg font-semibold text-slate-900 leading-tight">
@@ -510,7 +531,7 @@ const Home = () => {
                           </div>
                           <div className="mt-4 flex items-center justify-between">
                             <span className="text-xs font-medium text-slate-600">Explore products</span>
-                            <span className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-slate-100 text-slate-800 transition-all duration-300 group-hover:bg-yellow-600 group-hover:text-white">
+                            <span className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-blue-100 text-slate-800 transition-all duration-300 group-hover:bg-yellow-600 group-hover:text-white">
                               <ChevronRight className="h-4 w-4" />
                             </span>
                           </div>
@@ -594,88 +615,172 @@ const Home = () => {
             <motion.h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-center mb-6 sm:mb-8 md:mb-12 bg-gradient-to-r from-red-600 via-pink-500 to-yellow-400 text-transparent bg-clip-text drop-shadow-lg" variants={heroTextReveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
               Special Offer
             </motion.h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 w-full">
-              {specialOffers.map((product, index) => (
-                (() => {
-                  const matchedProduct = resolveOfferProduct(product);
-                  const offerStock = Number(product?.stock ?? 100);
-                  const matchedStock = Number(matchedProduct?.stock ?? offerStock);
-                  const isOutOfStock = !Number.isFinite(matchedStock) || matchedStock <= 0;
-                  const likeKey = getOfferLikeKey(product);
-                  const likeState = specialOfferLikes[likeKey] || { count: 0, liked: false };
-                  const originalPrice = Number(product.originalPrice || 0);
-                  const currentPrice = Number(product.currentPrice || 0);
-                  return (
+            
+            {(() => {
+              const totalPages = Math.ceil(specialOffers.length / offersPerPage);
+              const startIdx = (currentOfferPage - 1) * offersPerPage;
+              const endIdx = startIdx + offersPerPage;
+              const paginatedOffers = specialOffers.slice(startIdx, endIdx);
+
+              return (
+                <>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 w-full mb-8">
+                    {paginatedOffers.map((product, index) => (
+                      (() => {
+                        const matchedProduct = resolveOfferProduct(product);
+                        const offerStock = Number(product?.stock ?? 100);
+                        const matchedStock = Number(matchedProduct?.stock ?? offerStock);
+                        const isOutOfStock = !Number.isFinite(matchedStock) || matchedStock <= 0;
+                        const likeKey = getOfferLikeKey(product);
+                        const likeState = specialOfferLikes[likeKey] || { count: 0, liked: false };
+                        const originalPrice = Number(product.originalPrice || 0);
+                        const currentPrice = Number(product.currentPrice || 0);
+                        return (
+                          <motion.div
+                            key={index}
+                            className="bg-white p-3 sm:p-4 rounded-xl shadow-md hover:shadow-xl transition-shadow flex flex-col"
+                            variants={cardHover}
+                            initial="rest"
+                            whileHover="hover"
+                          >
+                            {/* SPECIAL OFFER IMAGE — fixed height 140px, tighter rounded corners */}
+                            <div
+                              className="relative w-full overflow-hidden rounded-lg border border-red-200 shadow mb-3 cursor-pointer"
+                              onClick={() => handleProductClick(product)}
+                              style={{ height: '140px' }}
+                            >
+                              <motion.img
+                                src={getFullImageUrl(product.image)}
+                                alt={product.name}
+                                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                                variants={fadeIn}
+                                initial="hidden"
+                                whileInView="visible"
+                                viewport={{ once: true }}
+                              />
+                              {isOutOfStock && (
+                                <div className="absolute inset-0 bg-black/50 flex items-center justify-center pointer-events-none">
+                                  <span className="bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-md tracking-wide">OUT OF STOCK</span>
+                                </div>
+                              )}
+                            </div>
+                            <motion.h3
+                              onClick={() => handleProductClick(product)}
+                              className="font-semibold mb-1 cursor-pointer hover:text-blue-600 text-center text-sm sm:text-base line-clamp-2"
+                              whileHover={{ color: '#2563eb', scale: 1.05 }}
+                            >
+                              {product.name}
+                            </motion.h3>
+                            <p className="text-xs text-gray-600 mb-1 text-center">{product.category}</p>
+                            <div className="mb-2 flex justify-center">
+                              <span className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold border ${isOutOfStock ? 'bg-red-50 text-red-700 border-red-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200'}`}>
+                                Quantity in Stock:
+                                <span className="font-bold">{Number.isFinite(matchedStock) ? matchedStock : 0}</span>
+                              </span>
+                            </div>
+                            <div className="mb-2 sm:mb-3 text-center flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
+                              <span className="text-xs text-gray-500 line-through">RWF {originalPrice.toLocaleString()}</span>
+                              <span className="text-sm text-red-600 font-bold">RWF {currentPrice.toLocaleString()}</span>
+                            </div>
+                            <div className="flex flex-col sm:flex-row justify-between items-center w-full mt-auto gap-2">
+                              <motion.button
+                                disabled={isOutOfStock}
+                                className={`px-3 sm:px-4 py-2 rounded text-xs sm:text-sm font-bold shadow-md transition-all w-full sm:w-auto ${isOutOfStock ? 'bg-gray-400 text-white cursor-not-allowed' : 'bg-red-600 text-white hover:bg-red-700'}`}
+                                variants={buttonTap}
+                                whileTap="tap"
+                                onClick={() => handleSpecialOfferAddToCart(product)}
+                              >
+                                {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
+                              </motion.button>
+                              <motion.button
+                                onClick={() => toggleSpecialOfferLike(product)}
+                                className="inline-flex items-center gap-1 text-gray-600 hover:text-red-600 transition-colors"
+                                whileHover={{ color: '#dc2626', scale: 1.05 }}
+                              >
+                                <Heart className={`w-4 h-4 sm:w-5 sm:h-5 ${likeState.liked ? 'fill-red-500 text-red-500' : ''}`} />
+                                <span className="text-xs font-bold">{likeState.count}</span>
+                              </motion.button>
+                            </div>
+                          </motion.div>
+                        );
+                      })()
+                    ))}
+                  </div>
+
+                  {/* Pagination Controls */}
+                  {totalPages > 1 && (
                     <motion.div
-                      key={index}
-                      className="bg-white p-3 sm:p-4 rounded-xl shadow-md hover:shadow-xl transition-shadow flex flex-col"
-                      variants={cardHover}
-                      initial="rest"
-                      whileHover="hover"
+                      className="flex items-center justify-center gap-2 sm:gap-3 mt-8 flex-wrap"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3 }}
+                      viewport={{ once: true }}
                     >
-                      {/* SPECIAL OFFER IMAGE — fixed height 140px, tighter rounded corners */}
-                      <div
-                        className="relative w-full overflow-hidden rounded-lg border border-red-200 shadow mb-3 cursor-pointer"
-                        onClick={() => handleProductClick(product)}
-                        style={{ height: '140px' }}
+                      <motion.button
+                        onClick={() => {
+                          setCurrentOfferPage(Math.max(1, currentOfferPage - 1));
+                          document.getElementById('special-offers-section')?.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                        disabled={currentOfferPage === 1}
+                        className={`px-3 sm:px-4 py-2 rounded-lg font-semibold text-sm transition-all ${
+                          currentOfferPage === 1
+                            ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                            : 'bg-red-600 text-white hover:bg-red-700 shadow-md'
+                        }`}
+                        whileHover={currentOfferPage !== 1 ? { scale: 1.05 } : {}}
+                        whileTap={currentOfferPage !== 1 ? { scale: 0.95 } : {}}
                       >
-                        <motion.img
-                          src={getFullImageUrl(product.image)}
-                          alt={product.name}
-                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                          variants={fadeIn}
-                          initial="hidden"
-                          whileInView="visible"
-                          viewport={{ once: true }}
-                        />
-                        {isOutOfStock && (
-                          <div className="absolute inset-0 bg-black/50 flex items-center justify-center pointer-events-none">
-                            <span className="bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-md tracking-wide">OUT OF STOCK</span>
-                          </div>
-                        )}
+                        ← Previous
+                      </motion.button>
+
+                      <div className="flex items-center gap-1 sm:gap-2 flex-wrap justify-center">
+                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                          <motion.button
+                            key={page}
+                            onClick={() => {
+                              setCurrentOfferPage(page);
+                              document.getElementById('special-offers-section')?.scrollIntoView({ behavior: 'smooth' });
+                            }}
+                            className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg font-bold text-sm transition-all ${
+                              page === currentOfferPage
+                                ? 'bg-red-600 text-white shadow-lg'
+                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                            }`}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                          >
+                            {page}
+                          </motion.button>
+                        ))}
                       </div>
-                      <motion.h3
-                        onClick={() => handleProductClick(product)}
-                        className="font-semibold mb-1 cursor-pointer hover:text-blue-600 text-center text-sm sm:text-base line-clamp-2"
-                        whileHover={{ color: '#2563eb', scale: 1.05 }}
+
+                      <motion.button
+                        onClick={() => {
+                          setCurrentOfferPage(Math.min(totalPages, currentOfferPage + 1));
+                          document.getElementById('special-offers-section')?.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                        disabled={currentOfferPage === totalPages}
+                        className={`px-3 sm:px-4 py-2 rounded-lg font-semibold text-sm transition-all ${
+                          currentOfferPage === totalPages
+                            ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                            : 'bg-red-600 text-white hover:bg-red-700 shadow-md'
+                        }`}
+                        whileHover={currentOfferPage !== totalPages ? { scale: 1.05 } : {}}
+                        whileTap={currentOfferPage !== totalPages ? { scale: 0.95 } : {}}
                       >
-                        {product.name}
-                      </motion.h3>
-                      <p className="text-xs text-gray-600 mb-1 text-center">{product.category}</p>
-                      <div className="mb-2 flex justify-center">
-                        <span className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold border ${isOutOfStock ? 'bg-red-50 text-red-700 border-red-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200'}`}>
-                          Quantity in Stock:
-                          <span className="font-bold">{Number.isFinite(matchedStock) ? matchedStock : 0}</span>
-                        </span>
-                      </div>
-                      <div className="mb-2 sm:mb-3 text-center flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
-                        <span className="text-xs text-gray-500 line-through">RWF {originalPrice.toLocaleString()}</span>
-                        <span className="text-sm text-red-600 font-bold">RWF {currentPrice.toLocaleString()}</span>
-                      </div>
-                      <div className="flex flex-col sm:flex-row justify-between items-center w-full mt-auto gap-2">
-                        <motion.button
-                          disabled={isOutOfStock}
-                          className={`px-3 sm:px-4 py-2 rounded text-xs sm:text-sm font-bold shadow-md transition-all w-full sm:w-auto ${isOutOfStock ? 'bg-gray-400 text-white cursor-not-allowed' : 'bg-red-600 text-white hover:bg-red-700'}`}
-                          variants={buttonTap}
-                          whileTap="tap"
-                          onClick={() => handleSpecialOfferAddToCart(product)}
-                        >
-                          {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
-                        </motion.button>
-                        <motion.button
-                          onClick={() => toggleSpecialOfferLike(product)}
-                          className="inline-flex items-center gap-1 text-gray-600 hover:text-red-600 transition-colors"
-                          whileHover={{ color: '#dc2626', scale: 1.05 }}
-                        >
-                          <Heart className={`w-4 h-4 sm:w-5 sm:h-5 ${likeState.liked ? 'fill-red-500 text-red-500' : ''}`} />
-                          <span className="text-xs font-bold">{likeState.count}</span>
-                        </motion.button>
-                      </div>
+                        Next →
+                      </motion.button>
                     </motion.div>
-                  );
-                })()
-              ))}
-            </div>
+                  )}
+
+                  {specialOffers.length === 0 && (
+                    <div className="text-center py-12">
+                      <p className="text-gray-500 text-lg">No special offers available at the moment.</p>
+                    </div>
+                  )}
+                </>
+              );
+            })()}
           </div>
         </motion.section>
 
