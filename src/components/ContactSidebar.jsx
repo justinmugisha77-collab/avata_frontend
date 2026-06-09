@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, Phone, Mail, X } from 'lucide-react';
+import { Phone, Mail, X, MessageCircle } from 'lucide-react';
+import { FaWhatsapp } from 'react-icons/fa';
 import { links as socialLinks } from './SocialSidebar';
 
 const ContactSidebar = ({ side = 'right' }) => {
@@ -10,16 +11,16 @@ const ContactSidebar = ({ side = 'right' }) => {
     {
       id: 'whatsapp',
       label: 'WhatsApp',
-      icon: MessageCircle,
+      icon: FaWhatsapp,
       bgColor: 'bg-emerald-500 hover:bg-emerald-600',
-      link: 'https://wa.me/250788123456' // Replace with actual number
+      link: 'https://wa.me/250788305811' // Replace with actual number
     },
     {
       id: 'call',
       label: 'Call Us',
       icon: Phone,
       bgColor: 'bg-blue-600 hover:bg-blue-700',
-      link: 'tel:+250788123456' // Replace with actual number
+      link: 'tel:+250788305811' // Replace with actual number
     },
     {
       id: 'email',
@@ -94,29 +95,30 @@ const ContactSidebar = ({ side = 'right' }) => {
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         initial={{ opacity: 0, scale: 0 }}
-        animate={{ opacity: 1, scale: 1 }}
+        animate={{ opacity: 1, scale: [1, 1.03, 1] }}
         exit={{ opacity: 0, scale: 0 }}
         transition={{ delay: 0.2 }}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        className={`fixed bottom-5 ${side === 'right' ? 'right-4 sm:right-6' : 'left-4 sm:left-6'} z-40 w-14 h-14 rounded-full text-white font-bold shadow-lg transition-all duration-200 flex items-center justify-center ${
-          isOpen ? 'bg-red-500 hover:bg-red-600' : 'bg-pink-600 hover:bg-pink-700'
-        }`}
+        whileHover={{ scale: 1.12 }}
+        whileTap={{ scale: 0.95 }}
+        className={`fixed bottom-5 ${side === 'right' ? 'right-4 sm:right-6' : 'left-4 sm:left-6'} z-40 w-14 h-14 rounded-full text-white font-bold shadow-[0_30px_60px_rgba(139,92,246,0.25)] transition-all duration-200 flex items-center justify-center bg-gradient-to-br from-fuchsia-500 via-violet-500 to-orange-500`}
         title={isOpen ? 'Close' : 'Open contacts'}
       >
         <motion.div
           initial={false}
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.3 }}
+          animate={isOpen ? { rotate: 180, y: [0, -4, 0] } : { rotate: 0, y: [0, -4, 0] }}
+          transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
         >
-          <X className="w-6 h-6" />
+          {isOpen ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
         </motion.div>
         {!isOpen && (
-          <motion.div
+          <motion.span
             initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            className={`absolute w-3 h-3 bg-red-500 rounded-full top-1 ${side === 'right' ? 'right-1' : 'left-1'}`}
-          />
+            animate={{ scale: [1, 1.2, 1] }}
+            transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute top-1 right-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-black text-white"
+          >
+            !
+          </motion.span>
         )}
       </motion.button>
     </AnimatePresence>

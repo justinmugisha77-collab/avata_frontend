@@ -15,7 +15,7 @@ import Footer from '../components/Footer';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
 import ContactSidebar from '../components/ContactSidebar';
-import { ChevronDown, ChevronRight, ChevronUp, Heart, ShoppingCart, Shirt, ShoppingBag, HardHat, Cloud, Eye, Ear, Hand, Shield, Flame, Truck, TrafficCone, Droplet, Volume2, VolumeX } from 'lucide-react';
+import { ChevronRight, Heart, ShoppingCart, Shirt, ShoppingBag, HardHat, Cloud, Eye, Ear, Hand, Shield, Flame, Truck, TrafficCone, Droplet, Volume2, VolumeX } from 'lucide-react';
 import getFullImageUrl from '../utils/getFullImageUrl';
 
 const Home = () => {
@@ -141,11 +141,8 @@ const Home = () => {
   const [specialOfferLikes, setSpecialOfferLikes] = React.useState({});
   const [heroMedia, setHeroMedia] = React.useState({ type: 'image', video: '', videoUrl: '' });
   const [heroMuted, setHeroMuted] = React.useState(false);
-  const [canScrollUp, setCanScrollUp] = React.useState(false);
-  const [canScrollDown, setCanScrollDown] = React.useState(true);
   const [currentOfferPage, setCurrentOfferPage] = React.useState(1);
   const offersPerPage = 8;
-  const [sidebarSide, setSidebarSide] = React.useState(() => localStorage.getItem('sidebarSide') || 'right');
 
   const getOfferLikeKey = React.useCallback((offer) => {
     const id = Number(offer?.id || offer?.special_offer_id || 0);
@@ -184,36 +181,6 @@ const Home = () => {
       persistSpecialOfferLikes(next);
       return next;
     });
-  };
-
-  React.useEffect(() => {
-    const updateScrollState = () => {
-      const top = window.scrollY || window.pageYOffset || 0;
-      const viewport = window.innerHeight || 0;
-      const doc = document.documentElement;
-      const pageHeight = Math.max(doc.scrollHeight || 0, document.body.scrollHeight || 0);
-      setCanScrollUp(top > 160);
-      setCanScrollDown(top + viewport < pageHeight - 120);
-    };
-
-    updateScrollState();
-    window.addEventListener('scroll', updateScrollState, { passive: true });
-    window.addEventListener('resize', updateScrollState);
-
-    return () => {
-      window.removeEventListener('scroll', updateScrollState);
-      window.removeEventListener('resize', updateScrollState);
-    };
-  }, []);
-
-  const handleScrollTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handleScrollBottom = () => {
-    const doc = document.documentElement;
-    const pageHeight = Math.max(doc.scrollHeight || 0, document.body.scrollHeight || 0);
-    window.scrollTo({ top: pageHeight, behavior: 'smooth' });
   };
 
   React.useEffect(() => {
@@ -264,14 +231,6 @@ const Home = () => {
 
     loadProductsCatalog();
   }, []);
-
-  React.useEffect(() => {
-    try {
-      localStorage.setItem('sidebarSide', sidebarSide);
-    } catch (_e) {
-      // ignore
-    }
-  }, [sidebarSide]);
 
   const normalizeText = (value) => String(value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
 
@@ -380,17 +339,7 @@ const Home = () => {
       <AnimatedNavbar>
         <Header />
       </AnimatedNavbar>
-      <ContactSidebar side={sidebarSide} />
-
-      {/* Side flip control (moves social/contact side left ↔ right) */}
-      <button
-        type="button"
-        onClick={() => setSidebarSide((s) => (s === 'right' ? 'left' : 'right'))}
-        className="fixed bottom-5 left-4 z-50 inline-flex items-center gap-2 px-3 py-2 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition"
-        title="Flip sidebars"
-      >
-        Flip Side
-      </button>
+      <ContactSidebar side="right" />
       {/* Animated Hero Section */}
       <motion.section
         className="text-white py-8 sm:py-12 md:py-16 lg:py-20 w-full relative overflow-hidden flex items-center justify-center mt-8 min-h-[400px] sm:min-h-[450px] md:min-h-[500px]"
@@ -500,8 +449,8 @@ const Home = () => {
                         onClick={() => handleCategoryNavigate(category)}
                         className="group relative flex h-full flex-col overflow-hidden rounded-[28px] border border-blue-200 bg-blue-50 shadow-[0_18px_45px_rgba(15,23,42,0.08)] transition-all duration-300 hover:-translate-y-1"
                       >
-                        {/* CATEGORY IMAGE — reduced from h-56 to h-36 */}
-                        <div className="relative h-36 overflow-hidden bg-blue-100">
+                        {/* CATEGORY IMAGE — reduced from h-56 to h-28 */}
+                        <div className="relative h-28 overflow-hidden bg-blue-100">
                           {category?.image ? (
                             <img
                               src={getFullImageUrl(category.image)}
@@ -833,30 +782,6 @@ const Home = () => {
         </motion.section>
       </main>
 
-      <div className="fixed bottom-5 right-4 sm:right-6 z-40 flex flex-col gap-2">
-        {canScrollUp && (
-          <button
-            type="button"
-            onClick={handleScrollTop}
-            className="inline-flex items-center justify-center w-11 h-11 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition"
-            aria-label="Go to top"
-            title="Go to top"
-          >
-            <ChevronUp className="w-5 h-5" />
-          </button>
-        )}
-        {canScrollDown && (
-          <button
-            type="button"
-            onClick={handleScrollBottom}
-            className="inline-flex items-center justify-center w-11 h-11 rounded-full bg-gray-800 text-white shadow-lg hover:bg-gray-900 transition"
-            aria-label="Go to bottom"
-            title="Go to bottom"
-          >
-            <ChevronDown className="w-5 h-5" />
-          </button>
-        )}
-      </div>
 
       <Footer />
     </div>

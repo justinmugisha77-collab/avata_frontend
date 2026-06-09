@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import AnimatedNavbar from '../components/AnimatedNavbar';
 import Header from '../components/Header';
+import ContactSidebar from '../components/ContactSidebar';
 import Footer from '../components/Footer';
 import { SUPPORT_EMAIL, SUPPORT_GMAIL_COMPOSE } from '../utils/supportContact';
 
@@ -46,6 +47,7 @@ const Contact = () => {
       <AnimatedNavbar>
         <Header />
       </AnimatedNavbar>
+      <ContactSidebar />
       <main className="flex-1 flex flex-col justify-center items-center pt-20 sm:pt-24 pb-8 sm:pb-12 px-3 sm:px-4">
         <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="w-full max-w-3xl">
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-center mb-6 sm:mb-8 text-blue-900 drop-shadow-lg">Contact Us</h1>

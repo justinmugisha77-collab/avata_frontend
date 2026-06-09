@@ -173,7 +173,7 @@ const ProductCard = ({ product, size = 'normal' }) => {
             {/* Image Area */}
             <div
                 ref={imageContainerRef}
-                className={`relative w-full ${isSmall ? 'aspect-[4/3] p-2' : 'aspect-square p-4'} bg-gradient-to-br from-slate-50 via-white to-blue-50 flex items-center justify-center overflow-hidden cursor-pointer`}
+                className={`relative w-full ${isSmall ? 'aspect-[4/3] p-2' : 'aspect-[4/3] p-3'} bg-gradient-to-br from-slate-50 via-white to-blue-50 flex items-center justify-center overflow-hidden cursor-pointer`}
                 tabIndex={0}
                 aria-label={product.name}
                 onMouseEnter={() => setShowZoomControls(true)}
